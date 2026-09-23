@@ -2,7 +2,7 @@ import React from "react";
 import MaskText from "./MaskText";
 import Reveal from "./Reveal";
 
-export default function SectionHeading({ index, title, count, note }) {
+export default function SectionHeading({ index, title, note }) {
   return (
     <header className="grid gap-6 border-b border-line pb-8 md:grid-cols-[1fr_auto] md:items-end md:gap-12">
       <div>
@@ -17,11 +17,6 @@ export default function SectionHeading({ index, title, count, note }) {
 
         <h2 className="mt-5 font-display text-[clamp(2.6rem,8.5vw,7rem)] leading-[0.88] font-medium tracking-[-0.035em] text-fg uppercase">
           <MaskText>{title}</MaskText>
-          {count != null ? (
-            <sup className="ml-2 align-top font-mono text-[clamp(0.75rem,1.3vw,1rem)] font-normal tracking-normal text-gold">
-              {String(count).padStart(2, "0")}
-            </sup>
-          ) : null}
         </h2>
       </div>
 

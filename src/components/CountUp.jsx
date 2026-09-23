@@ -33,7 +33,12 @@ export default function CountUp({
     let frame;
     const start = performance.now();
     const tick = (now) => {
-      const progress = Math.min(1, (now - start) / (duration * 1000));
+      // A rAF timestamp is the frame's start time, which can predate the
+      // performance.now() taken when this effect ran — and a throttled tab
+      // widens that gap. Unclamped, the easing then runs backwards and the
+      // number renders negative.
+      const elapsed = Math.max(0, now - start);
+      const progress = Math.min(1, elapsed / (duration * 1000));
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(to * eased);
       if (progress < 1) frame = requestAnimationFrame(tick);

@@ -5,8 +5,10 @@ import VaporizeTextCycle, { Tag } from "./vapour-text-effect";
 
 // How long the name holds before it starts dissolving, and how long the
 // overlay itself takes to fade out once it does. Keep FADE_OUT_MS in sync
-// with the `duration-500` class below.
-const DISSOLVE_AT_MS = 2200;
+// with the `duration-500` class below. The hold is just long enough for the
+// name to finish arriving and begin to vaporise; anything past that is
+// someone waiting to read the page.
+const DISSOLVE_AT_MS = 1700;
 const FADE_OUT_MS = 500;
 
 // The canvas draws at a fixed pixel size, so a phone would clip "Kushagra's
@@ -33,12 +35,20 @@ export default function LoadingScreen({ onFinish }) {
   }, []);
 
   useEffect(() => {
-    const dissolveTimer = setTimeout(() => setLeaving(true), DISSOLVE_AT_MS);
+    const leave = () => setLeaving(true);
+    const dissolveTimer = setTimeout(leave, DISSOLVE_AT_MS);
     // Kick the progress rule on the next frame so the transition actually runs.
     const chargeFrame = requestAnimationFrame(() => setCharging(true));
+
+    // Any sign of intent skips it. Someone who has started clicking, typing
+    // or scrolling has told us they want the page, not the intro.
+    const skipEvents = ["pointerdown", "keydown", "wheel", "touchstart"];
+    skipEvents.forEach((type) => window.addEventListener(type, leave, { passive: true }));
+
     return () => {
       clearTimeout(dissolveTimer);
       cancelAnimationFrame(chargeFrame);
+      skipEvents.forEach((type) => window.removeEventListener(type, leave));
     };
   }, []);
 
@@ -66,7 +76,7 @@ export default function LoadingScreen({ onFinish }) {
     >
       {/* Same night sky the page itself sits on, so the fade-out lands on a
           continuous scene rather than cutting from black. */}
-      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,#16213a_0%,#0b1524_45%,#08101b_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-10%,#16213a_0%,#0b1524_45%,#0a0e16_100%)]" />
       <div
         className="absolute -top-[22vh] left-1/2 h-[72vh] w-[90vw] max-w-[1100px] -translate-x-1/2 rounded-full opacity-70"
         style={{

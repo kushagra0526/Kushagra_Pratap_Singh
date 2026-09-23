@@ -13,7 +13,6 @@ export default function Experience() {
         <SectionHeading
           index="02"
           title="Experience"
-          count={experience.length}
           note="Where I've shipped to real users, with real money moving through it."
         />
 

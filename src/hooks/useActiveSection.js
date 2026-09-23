@@ -14,16 +14,33 @@ export default function useActiveSection(ids) {
     const update = () => {
       const line = window.innerHeight * 0.4;
       let current = null;
+      let currentTop = -Infinity;
+      let lowest = null;
+      let lowestTop = -Infinity;
 
+      // Decided by position on the page, not position in `ids`. Taking "the
+      // last id that has crossed the line" only works while the array happens
+      // to be in page order; one id added out of order and it wins everywhere
+      // below it — which is how the status bar came to read "Activity" at
+      // Stack, Highlights and Contact alike.
       for (const id of ids) {
         const element = document.getElementById(id);
-        if (element && element.getBoundingClientRect().top <= line) current = id;
+        if (!element) continue;
+        const top = element.getBoundingClientRect().top;
+        if (top <= line && top > currentTop) {
+          current = id;
+          currentTop = top;
+        }
+        if (top > lowestTop) {
+          lowest = id;
+          lowestTop = top;
+        }
       }
 
       // The last section can be too short to ever reach the line.
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-      if (atBottom && ids.length) current = ids[ids.length - 1];
+      if (atBottom && lowest) current = lowest;
 
       setActive(current);
     };

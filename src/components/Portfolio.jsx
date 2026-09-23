@@ -1,20 +1,25 @@
 import React from "react";
 import Ambient from "./Ambient";
+import CommandPalette from "./CommandPalette";
 import Contact, { Footer } from "./Contact";
 import Cursor from "./Cursor";
 import Experience from "./Experience";
 import Hero from "./Hero";
 import Highlights from "./Highlights";
+import Marquee from "./Marquee";
 import Nav from "./Nav";
 import Overview from "./Overview";
 import ScrollProgress from "./ScrollProgress";
+import Spotlight from "./Spotlight";
+import StatusBar from "./StatusBar";
 import Stack from "./Stack";
 import Work from "./Work";
 import { scrollToId } from "../hooks/useSmoothScroll";
 
 export default function Portfolio({ started = true }) {
   return (
-    <div className="grain">
+    // The status bar is fixed, so the page owes it that last row of space.
+    <div className="grain md:pb-11">
       <a
         href="#overview"
         onClick={(event) => {
@@ -29,10 +34,14 @@ export default function Portfolio({ started = true }) {
       <Cursor />
       <ScrollProgress />
       <Ambient />
+      <Spotlight />
       <Nav />
+      <CommandPalette />
+      <StatusBar />
 
       <main>
         <Hero started={started} />
+        <Marquee />
         <Overview />
         <Experience />
         <Work />

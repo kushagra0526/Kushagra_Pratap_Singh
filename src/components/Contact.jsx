@@ -177,7 +177,7 @@ export function Footer() {
         <p>
           © {new Date().getFullYear()} {profile.fullName}
         </p>
-        <p>Built with React, three.js and Framer Motion.</p>
+        <p>Built with React and Framer Motion.</p>
         <button
           type="button"
           onClick={() => scrollToId("top")}

@@ -11,7 +11,6 @@ export default function Highlights() {
         <SectionHeading
           index="05"
           title="Highlights"
-          count={highlights.length}
           note="Competitive programming, a workshop, a hackathon, and a design team."
         />
 

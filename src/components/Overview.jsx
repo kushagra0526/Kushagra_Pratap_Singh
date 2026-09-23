@@ -1,11 +1,12 @@
 import React from "react";
 import Glow from "./Glow";
+import MaskText from "./MaskText";
 import Portrait from "./Portrait";
 import Reveal from "./Reveal";
 import ScrollText from "./ScrollText";
 import SectionHeading from "./SectionHeading";
 import Tilt from "./Tilt";
-import { overview } from "../data/content";
+import { motto, overview } from "../data/content";
 
 function Glyph({ kind }) {
   const props = {
@@ -62,7 +63,7 @@ export default function Overview() {
               className="font-display text-[clamp(1.45rem,2.6vw,2.2rem)] leading-[1.3] tracking-[-0.01em] text-fg"
             />
 
-            <div className="mt-10 grid gap-5 text-[1.02rem] leading-[1.7] text-muted md:grid-cols-2">
+            <div className="mt-10 flex flex-col gap-5 text-[1.02rem] leading-[1.7] text-muted">
               {overview.paragraphs.map((paragraph) => (
                 <Reveal key={paragraph.slice(0, 28)}>
                   <p>{paragraph}</p>
@@ -90,6 +91,33 @@ export default function Overview() {
             </Tilt>
           </Reveal>
         </div>
+
+        {/* The motto: the turn from who I am (above) to what I do (below).
+            Each line lands in turn, in the solid / gold / outlined rhythm the
+            rest of the display type uses. */}
+        <figure className="mt-24 border-y border-line py-14 md:mt-32 md:py-20">
+          <blockquote className="font-display text-[clamp(2rem,6.2vw,5.2rem)] leading-[0.98] font-medium tracking-[-0.035em] uppercase">
+            {motto.map((line, index) => (
+              <span key={line} className="block">
+                <MaskText
+                  delay={index * 0.12}
+                  className={
+                    index === 1
+                      ? "text-gold"
+                      : index === 2
+                        ? "text-transparent [-webkit-text-stroke:1.2px_rgba(255,253,238,0.6)]"
+                        : "text-fg"
+                  }
+                >
+                  {line}
+                </MaskText>
+              </span>
+            ))}
+          </blockquote>
+          <figcaption className="mt-8 font-mono text-[0.68rem] tracking-[0.16em] text-dim uppercase">
+            — The motto I work by
+          </figcaption>
+        </figure>
 
         <div className="mt-20">
           <Reveal>

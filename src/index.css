@@ -11,7 +11,7 @@
 :root {
   color-scheme: dark;
 
-  --c-bg: #08101b;
+  --c-bg: #0a0e16;
   --c-surface: #101a27;
   --c-raised: #222d3b;
   --c-line: rgba(255, 253, 238, 0.1);
@@ -164,15 +164,6 @@
   }
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @keyframes twinkle {
   0%,
   100% {
@@ -190,6 +181,14 @@
   html.has-custom-cursor * {
     cursor: none !important;
   }
+}
+
+/* While the hero sphere is being dragged, the drag can start over the
+   headline, and without this it selects the text instead of turning. */
+.sphere-dragging,
+.sphere-dragging * {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Fine film grain over everything, to take the flatness off the navy. */
@@ -243,6 +242,16 @@ html.lenis body {
   50% {
     transform: translateY(3px);
     opacity: 1;
+  }
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
   }
 }
 

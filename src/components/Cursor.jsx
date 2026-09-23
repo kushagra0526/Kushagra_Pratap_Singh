@@ -24,6 +24,10 @@ export default function Cursor() {
   const [label, setLabel] = useState("");
   const [hovering, setHovering] = useState(false);
   const [pressed, setPressed] = useState(false);
+  // A label pushed from outside, for things that are drawn rather than laid
+  // out: the hero sphere sits under the copy, so pointerover never reaches it
+  // and it has to say for itself when the pointer is over it.
+  const [hint, setHint] = useState(null);
 
   useEffect(() => {
     if (!active) return undefined;
@@ -48,11 +52,13 @@ export default function Cursor() {
 
     const onDown = () => setPressed(true);
     const onUp = () => setPressed(false);
+    const onHint = (event) => setHint(event.detail || null);
 
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerover", onOver, { passive: true });
     window.addEventListener("pointerdown", onDown, { passive: true });
     window.addEventListener("pointerup", onUp, { passive: true });
+    window.addEventListener("cursor-hint", onHint);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");
@@ -60,19 +66,21 @@ export default function Cursor() {
       document.removeEventListener("pointerover", onOver);
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("cursor-hint", onHint);
     };
   }, [active, x, y]);
 
   if (!active) return null;
 
-  const ringSize = label ? 68 : hovering ? 46 : 28;
+  const shown = hint || label;
+  const ringSize = shown ? 68 : hovering ? 46 : 28;
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[999] mix-blend-difference">
       <motion.span
         className="absolute top-0 left-0 block rounded-full bg-[#fffdee]"
         style={{ x, y, translateX: "-50%", translateY: "-50%", width: 5, height: 5 }}
-        animate={{ opacity: label ? 0 : 1 }}
+        animate={{ opacity: shown ? 0 : 1 }}
         transition={{ duration: 0.2 }}
       />
 
@@ -82,22 +90,22 @@ export default function Cursor() {
         animate={{
           width: ringSize,
           height: ringSize,
-          backgroundColor: label ? "rgba(255,253,238,1)" : "rgba(255,253,238,0)",
+          backgroundColor: shown ? "rgba(255,253,238,1)" : "rgba(255,253,238,0)",
           scale: pressed ? 0.85 : 1,
         }}
         transition={{ type: "spring", stiffness: 320, damping: 26, mass: 0.5 }}
       >
         <AnimatePresence>
-          {label ? (
+          {shown ? (
             <motion.span
-              key={label}
+              key={shown}
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.18 }}
-              className="font-mono text-[0.6rem] tracking-[0.08em] text-[#08101b] uppercase"
+              className="font-mono text-[0.6rem] tracking-[0.08em] text-[#0a0e16] uppercase"
             >
-              {label}
+              {shown}
             </motion.span>
           ) : null}
         </AnimatePresence>

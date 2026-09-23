@@ -112,7 +112,7 @@ export default function VectorSpace() {
             </g>
           ))}
 
-          <circle cx={QUERY.x} cy={QUERY.y} r="8" fill="#08101b" stroke="#edb358" strokeWidth="2" />
+          <circle cx={QUERY.x} cy={QUERY.y} r="8" fill="#0a0e16" stroke="#edb358" strokeWidth="2" />
           <circle cx={QUERY.x} cy={QUERY.y} r="3" fill="#edb358" />
         </svg>
 

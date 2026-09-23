@@ -54,13 +54,16 @@ export default function ProjectPoster({ project, size = "lg" }) {
           >
             {project.category}
           </p>
-          <h3
+          {/* Not a heading: the project's heading is its row in the Work
+              list. The poster repeats the name as cover art, and as an h3 it
+              put every project into the page outline twice. */}
+          <p
             className={`mt-2 font-display leading-[0.95] tracking-[-0.02em] text-fg ${
               large ? "text-[2.6rem]" : "text-[1.8rem]"
             }`}
           >
             {project.name}
-          </h3>
+          </p>
         </div>
 
         {large && Visual ? (

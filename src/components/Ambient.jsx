@@ -17,20 +17,27 @@ function mulberry32(seed) {
 // Three fields, not five: blur+blend layers this large are genuinely
 // expensive to composite, and three overlapping fields already read as one
 // continuous wash, so the extra two were cost without a visible difference.
+// Same blue/orange/olive family the site has always used. Each field is
+// large enough to overlap deep into its neighbour and fades out gradually
+// across its full radius (down to 0 by the edge, not cut off partway) —
+// a short, sharp falloff is what read as a "blob" instead of a blend.
 const FIELDS = [
   {
-    css: "left-[-22%] top-[-24%] h-[70vmax] w-[70vmax]",
-    color: "rgba(58,86,214,0.5)",
+    css: "left-[-22%] top-[-32%] h-[100vmax] w-[100vmax]",
+    stops:
+      "rgba(58,86,214,0.7) 0%, rgba(58,86,214,0.4) 24%, rgba(58,86,214,0.18) 46%, rgba(58,86,214,0.07) 66%, transparent 100%",
     animation: "drift-a 34s ease-in-out infinite",
   },
   {
-    css: "right-[-24%] top-[-16%] h-[74vmax] w-[74vmax]",
-    color: "rgba(214,84,42,0.46)",
+    css: "right-[-24%] top-[-26%] h-[104vmax] w-[104vmax]",
+    stops:
+      "rgba(214,84,42,0.6) 0%, rgba(214,84,42,0.32) 26%, rgba(214,84,42,0.14) 48%, rgba(214,84,42,0.05) 68%, transparent 100%",
     animation: "drift-c 38s ease-in-out infinite",
   },
   {
-    css: "left-[-14%] bottom-[-22%] h-[44vmax] w-[44vmax]",
-    color: "rgba(186,206,74,0.28)",
+    css: "left-[-12%] bottom-[-30%] h-[70vmax] w-[70vmax]",
+    stops:
+      "rgba(186,206,74,0.4) 0%, rgba(186,206,74,0.2) 28%, rgba(186,206,74,0.08) 52%, transparent 100%",
     animation: "drift-b 50s ease-in-out infinite",
   },
 ];
@@ -76,14 +83,14 @@ export default function Ambient() {
           className="absolute inset-x-0 top-0 h-[130vh]"
           style={reduced ? undefined : { y: lift, opacity: fade }}
         >
-          <div className="absolute inset-0 isolate opacity-70">
+          <div className="absolute inset-0 isolate">
             {FIELDS.map((field) => (
               <div
                 key={field.css}
                 className={`absolute rounded-full mix-blend-screen ${field.css}`}
                 style={{
-                  background: `radial-gradient(closest-side, ${field.color}, transparent 72%)`,
-                  filter: "blur(24px)",
+                  background: `radial-gradient(closest-side, ${field.stops})`,
+                  filter: "blur(36px)",
                   animation: reduced ? undefined : field.animation,
                 }}
               />

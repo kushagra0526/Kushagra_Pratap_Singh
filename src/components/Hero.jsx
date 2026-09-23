@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import BrandIcon from "./BrandIcon";
 import CountUp from "./CountUp";
-import LiquidBlob from "./LiquidBlob";
 import Magnetic from "./Magnetic";
+import SystemGraph from "./SystemGraph";
 import useMediaQuery from "../hooks/useMediaQuery";
 import usePrefersReducedMotion from "../hooks/usePrefersReducedMotion";
 import { scrollToId } from "../hooks/useSmoothScroll";
-import { heroStats, links, profile, socials } from "../data/content";
+import { heroStats, links, orbitLinks, profile, socials } from "../data/content";
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -49,37 +49,47 @@ function FadeUp({ children, started, delay = 0, className = "" }) {
   );
 }
 
+/**
+ * The system itself, rather than a paragraph about it: a mesh with the page's
+ * own content lit up on it.
+ *
+ * Anchored to the section's top-right rather than the copy column, so it can
+ * sit up beside the name and run out into the right-hand margin instead of
+ * crowding in over the headline. It still passes behind the type where the two
+ * meet — the mesh is dim and the display face heavy — and the labels hold
+ * themselves back until their node clears the text column.
+ */
+function HeroGraph({ started, avoidRef }) {
+  const reduced = usePrefersReducedMotion();
+  const room = useMediaQuery("(min-width: 1024px)");
+  if (!room) return null;
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute top-[6.5rem] right-[1.5vw] -z-10 h-[min(38vw,34rem)] w-[min(38vw,34rem)]"
+      initial={reduced ? false : { opacity: 0, scale: 0.92 }}
+      animate={started ? { opacity: 0.9, scale: 1 } : { opacity: 0, scale: 0.92 }}
+      transition={{ duration: 1.6, delay: 0.55, ease: EASE }}
+    >
+      <SystemGraph labels={orbitLinks} avoidRef={avoidRef} />
+    </motion.div>
+  );
+}
+
 export default function Hero({ started = true }) {
   const reduced = usePrefersReducedMotion();
-  // The blob's box is confined to the right side by geometry, not by a mask
-  // tuned to text length: "Kushagra Pratap Singh" alone runs past 70% of the
-  // hero width at common viewport sizes, so a percentage-based mask would
-  // have to be re-tuned any time the name or the viewport changed. Below this
-  // width there isn't room for a side panel at all, so it's skipped outright.
-  const showBlob = useMediaQuery("(min-width: 1180px)");
+  const headlineRef = useRef(null);
 
   return (
     <section id="top" className="relative isolate overflow-hidden">
-      {showBlob ? (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-[30%]"
-          style={{
-            maskImage: "linear-gradient(90deg, transparent 0%, black 40%)",
-            WebkitMaskImage: "linear-gradient(90deg, transparent 0%, black 40%)",
-          }}
-          initial={{ opacity: 0 }}
-          animate={started ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1.4, delay: 0.2, ease: EASE }}
-        >
-          <div className="pointer-events-auto h-full w-full">
-            <LiquidBlob reduced={reduced} />
-          </div>
-        </motion.div>
-      ) : null}
+      <HeroGraph started={started} avoidRef={headlineRef} />
 
-      <div className="mx-auto flex min-h-[100svh] max-w-[1240px] flex-col px-6 pt-28 pb-8 md:px-10 md:pt-32">
-        <div className="flex flex-1 flex-col justify-center">
+      {/* md:pb-20 reserves the fixed status bar's height plus a gap. The hero
+          is exactly one screen tall, so without it the stats row sat on the
+          bottom edge and the bar covered the second line of every label. */}
+      <div className="mx-auto flex min-h-[100svh] max-w-[1240px] flex-col px-6 pt-28 pb-8 md:px-10 md:pt-32 md:pb-20">
+        <div className="relative flex flex-1 flex-col justify-center">
           <FadeUp started={started} delay={0.05}>
             <p className="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/70 px-3.5 py-1.5 text-[0.8rem] text-muted backdrop-blur">
               <span className="relative flex h-2 w-2">
@@ -95,7 +105,10 @@ export default function Hero({ started = true }) {
 
           {/* First name solid, surname outlined: the one place on the page
               that borrows a graphic-design move instead of playing it safe. */}
-          <h1 className="mt-8 font-display text-[clamp(2.5rem,9.6vw,8rem)] leading-[0.86] font-medium tracking-[-0.04em] uppercase">
+          <h1
+            ref={headlineRef}
+            className="mt-8 font-display text-[clamp(2.5rem,9.6vw,8rem)] leading-[0.86] font-medium tracking-[-0.04em] uppercase"
+          >
             <Line text={profile.firstName} started={started} delay={0.12} />
             <Line text={profile.lastName} started={started} delay={0.22} outline />
           </h1>

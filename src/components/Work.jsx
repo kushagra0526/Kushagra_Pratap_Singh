@@ -89,7 +89,7 @@ function ProjectRow({ project, open, onToggle, onPreview, showVisual }) {
 
           <span className="min-w-0">
             <span
-              className={`block font-display text-[clamp(1.5rem,3.2vw,2.5rem)] leading-[1.05] tracking-[-0.02em] transition-transform duration-500 group-hover:translate-x-3 ${
+              className={`block font-display text-[clamp(1.6rem,3.2vw,2.65rem)] leading-[1.03] tracking-[-0.03em] transition-transform duration-500 group-hover:translate-x-3 ${
                 open ? "text-fg" : "text-fg/80"
               }`}
             >
@@ -211,7 +211,6 @@ export default function Work() {
         <SectionHeading
           index="03"
           title="Work"
-          count={projects.length}
           note="Three systems I built end to end, mostly to understand how they really work."
         />
 

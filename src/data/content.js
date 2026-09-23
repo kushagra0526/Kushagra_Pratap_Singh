@@ -31,12 +31,27 @@ export const socials = [
   { label: "GeeksforGeeks", href: links.geeksforgeeks, icon: "geeksforgeeks" },
 ];
 
+// Every numbered section, in page order. The mobile menu numbers these by
+// position, so leaving one out (Highlights was) shifts every number after it
+// and the menu contradicts the "05 / Highlights" on the page.
 export const navItems = [
   { id: "overview", label: "Overview" },
   { id: "experience", label: "Experience" },
   { id: "work", label: "Work" },
   { id: "stack", label: "Stack" },
+  { id: "highlights", label: "Highlights" },
   { id: "contact", label: "Contact" },
+];
+
+// The band between sections. Short nouns only: each one has to stay readable
+// while it is moving past at display size.
+export const marqueeTerms = [
+  "Permissions",
+  "Payments",
+  "Real-time sync",
+  "Event-driven",
+  "Vector search",
+  "Distributed systems",
 ];
 
 export const heroStats = [
@@ -45,6 +60,8 @@ export const heroStats = [
   { value: 3, label: "products built and deployed" },
   { value: 450, suffix: "+", label: "DSA problems solved" },
 ];
+
+export const motto = ["Learn from the world.", "Build for it.", "Find my place in it."];
 
 export const overview = {
   note: "Who I am, what I work on, and where I'm headed.",
@@ -113,8 +130,27 @@ export const experience = [
 
 export const projects = [
   {
-    id: "later-probably",
+    id: "ecom-graphql",
     index: "01",
+    name: "Ecom Microservices",
+    category: "Backend · Microservices",
+    summary:
+      "An e-commerce backend split into user, product and order services, sitting behind a single GraphQL gateway.",
+    highlights: [
+      "Unified GraphQL gateway with JWT authentication and role-based access control.",
+      "Apache Kafka for event-driven communication, so services scale and fail independently.",
+      "All three services containerised with Docker, with CI/CD on GitHub Actions.",
+    ],
+    stack: ["Node.js", "Express", "GraphQL", "Apollo", "MongoDB", "Kafka", "Docker"],
+    links: {
+      live: "https://frontend-phi-two-61.vercel.app",
+      github: "https://github.com/kushagra0526/ecom_microservice_graphql",
+    },
+    visual: "services",
+  },
+  {
+    id: "later-probably",
+    index: "02",
     name: "Later, Probably",
     category: "AI · Fullstack",
     summary:
@@ -134,7 +170,7 @@ export const projects = [
   },
   {
     id: "interlace",
-    index: "02",
+    index: "03",
     name: "Interlace",
     category: "Real-time · Distributed systems",
     summary:
@@ -150,25 +186,6 @@ export const projects = [
       github: "https://github.com/kushagra0526/Interlace",
     },
     visual: "crdt",
-  },
-  {
-    id: "ecom-graphql",
-    index: "03",
-    name: "Ecom Microservices",
-    category: "Backend · Microservices",
-    summary:
-      "An e-commerce backend split into user, product and order services, sitting behind a single GraphQL gateway.",
-    highlights: [
-      "Unified GraphQL gateway with JWT authentication and role-based access control.",
-      "Apache Kafka for event-driven communication, so services scale and fail independently.",
-      "All three services containerised with Docker, with CI/CD on GitHub Actions.",
-    ],
-    stack: ["Node.js", "Express", "GraphQL", "Apollo", "MongoDB", "Kafka", "Docker"],
-    links: {
-      live: "https://frontend-phi-two-61.vercel.app",
-      github: "https://github.com/kushagra0526/ecom_microservice_graphql",
-    },
-    visual: "services",
   },
 ];
 
@@ -295,3 +312,18 @@ export const education = [
 export const contact = {
   note: "I'm looking for a full-time engineering role starting in 2027, ideally on a team where the backend is the hard part. If that sounds like yours, I'd like to hear about it.",
 };
+
+// The lit nodes on the hero sphere: the page's own content, in short form.
+// Defined last so the project names come from `projects` rather than being
+// typed twice and drifting apart. Both lines stay short on purpose — they
+// have to be readable while the node carrying them is moving.
+export const orbitLinks = [
+  ...projects.map((project) => ({ call: project.name, note: project.category })),
+  { call: "Marine Edge", note: "SDE intern · 2025" },
+  { call: "7,000+ users", note: "backend I shipped" },
+  { call: "99.9% uptime", note: "100+ payments a day" },
+  { call: "Kafka", note: "event-driven services" },
+  { call: "pgvector", note: "semantic search" },
+  { call: "450+ DSA", note: "LeetCode · GFG" },
+  { call: "LNMIIT Jaipur", note: "B.Tech · 2027" },
+];
