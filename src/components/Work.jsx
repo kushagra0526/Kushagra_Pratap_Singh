@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import ProjectPoster from "./ProjectPoster";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import ProjectVideo from "./ProjectVideo";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import Tilt from "./Tilt";
 import useMediaQuery from "../hooks/useMediaQuery";
 import usePrefersReducedMotion from "../hooks/usePrefersReducedMotion";
 import { projects } from "../data/content";
@@ -18,53 +17,49 @@ const EASE = [0.22, 1, 0.36, 1];
 function HoverPreview({ project, pointerX, pointerY }) {
   const x = useSpring(pointerX, { stiffness: 220, damping: 26, mass: 0.5 });
   const y = useSpring(pointerY, { stiffness: 220, damping: 26, mass: 0.5 });
-  // Lean into the movement: the gap between raw and eased position is velocity.
-  const rotate = useTransform([pointerX, x], ([raw, eased]) => (raw - eased) * 0.05);
-
+  // No lean/rotation: rotating the card would blur the recording inside it.
   return (
     <motion.div
       className="pointer-events-none fixed top-0 left-0 z-40 hidden w-[26rem] lg:block"
-      style={{ x, y, translateX: "-50%", translateY: "-58%", rotate }}
+      style={{ x, y, translateX: "-50%", translateY: "-58%" }}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.28, ease: EASE }}
     >
       <div className="shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)]">
-        <ProjectPoster project={project} size="sm" />
+        <ProjectVideo project={project} size="sm" />
       </div>
     </motion.div>
   );
 }
 
-/** The stage: the active project's full poster, tipped in 3D space. */
+/**
+ * The stage: the active project's recording. Kept flat on purpose: any
+ * lingering rotate or scale makes the browser re-rasterise the video layer and
+ * the recording's UI text goes soft, so the swap only fades and slides.
+ */
 function Stage({ project }) {
   const reduced = usePrefersReducedMotion();
 
   return (
-    <Tilt max={4} scale={1}>
-      <div style={{ perspective: 1600 }}>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={project.id}
-            style={{ transformStyle: "preserve-3d" }}
-            initial={reduced ? false : { opacity: 0, rotateY: -18, rotateX: 8, z: -140 }}
-            animate={reduced ? { opacity: 1 } : { opacity: 1, rotateY: -6, rotateX: 4, z: 0 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, rotateY: 12, rotateX: 0, z: -140 }}
-            transition={{ duration: 0.55, ease: EASE }}
-          >
-            <div style={{ transform: "translateZ(24px)" }}>
-              <ProjectPoster project={project} size="lg" />
-            </div>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-10 left-[10%] h-14 w-[80%] rounded-[50%] bg-black/60 blur-2xl"
-              style={{ transform: "translateZ(-60px)" }}
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </Tilt>
+    <div className="relative">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={project.id}
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduced ? { opacity: 0 } : { opacity: 0, y: -12 }}
+          transition={{ duration: 0.45, ease: EASE }}
+        >
+          <ProjectVideo project={project} size="lg" />
+        </motion.div>
+      </AnimatePresence>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 left-[10%] -z-10 h-14 w-[80%] rounded-[50%] bg-black/60 blur-2xl"
+      />
+    </div>
   );
 }
 
@@ -174,7 +169,7 @@ function ProjectRow({ project, open, onToggle, onPreview, showVisual }) {
 
               {showVisual ? (
                 <div className="mt-8">
-                  <ProjectPoster project={project} size="sm" />
+                  <ProjectVideo project={project} size="sm" />
                 </div>
               ) : null}
             </div>
@@ -214,7 +209,7 @@ export default function Work() {
           note="Three systems I built end to end, mostly to understand how they really work."
         />
 
-        <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
           {isWide ? (
             <div>
               <div className="sticky top-28">

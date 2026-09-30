@@ -3,11 +3,9 @@ import { VISUALS } from "./visuals";
 import { PROJECT_TINTS } from "../lib/projectTints";
 
 /**
- * The big cover art for a project: a designed poster rather than a
- * screenshot, since none of the three live deployments currently render
- * anything worth capturing (one's behind sign-in, one opens an empty room,
- * one's backend is cold). The real technical diagram still appears, as a
- * proof card inset into the composition, so the claims stay honest.
+ * Designed cover art for a project, with its technical diagram inset as a
+ * proof card. ProjectVideo shows the screen recording instead and falls back
+ * to this when a project has no video or its file fails to load.
  */
 export default function ProjectPoster({ project, size = "lg" }) {
   const tint = PROJECT_TINTS[project.id] || PROJECT_TINTS["later-probably"];

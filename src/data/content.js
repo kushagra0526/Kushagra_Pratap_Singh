@@ -147,6 +147,7 @@ export const projects = [
       github: "https://github.com/kushagra0526/ecom_microservice_graphql",
     },
     visual: "services",
+    video: "/videos/ecom.mp4",
   },
   {
     id: "later-probably",
@@ -167,6 +168,7 @@ export const projects = [
       github: "https://github.com/kushagra0526/Later-Probably",
     },
     visual: "vectors",
+    video: "/videos/brag.mp4",
   },
   {
     id: "interlace",
@@ -186,6 +188,7 @@ export const projects = [
       github: "https://github.com/kushagra0526/Interlace",
     },
     visual: "crdt",
+    video: "/videos/interlace.mp4",
   },
 ];
 
